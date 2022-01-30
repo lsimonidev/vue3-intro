@@ -4,17 +4,30 @@
       :src="product.variants[product.selectedVariant].image"
       :alt="product.variants[product.selectedVariant].color"
     />
-    <ProductTitle
-      :name="product.name"
-      :brand="product.brand"
-      @mouseover="print"
-    />
+    <div class="product-info">
+      <ProductTitle :name="product.name" :brand="product.brand" />
+      <p>{{ stockStatus }}</p>
+      <p>Shipping: {{ premium ? 'Free' : '2,99' }}</p>
+      <ProductDetails :details="product.details" />
+      <ProductColors
+        :variants="product.variants"
+        @variant-hover="updateVariant"
+      />
+      <Button
+        text="Add to Cart"
+        :isDisabled="!stock"
+        @click="addToCart(product.variants[product.selectedVariant].id)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import ProductTitle from './ProductTitle'
 import ProductImage from './ProductImage'
+import ProductDetails from './ProductDetails'
+import ProductColors from './ProductColors'
+import Button from '../Button'
 
 export default {
   name: 'Product',
@@ -22,7 +35,19 @@ export default {
   components: {
     ProductTitle,
     ProductImage,
+    ProductDetails,
+    ProductColors,
+    Button,
   },
+
+  props: {
+    premium: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+
   data() {
     return {
       product: {
@@ -35,22 +60,43 @@ export default {
             id: 2234,
             color: 'green',
             image: require('@/assets/socks_green.jpg'),
-            quantity: 50,
+            stock: 2,
           },
           {
             id: 2235,
             color: 'blue',
             image: require('@/assets/socks_blue.jpg'),
-            quantity: 0,
+            stock: 0,
           },
         ],
         reviews: [],
       },
     }
   },
+
+  computed: {
+    stock() {
+      return this.product.variants[this.product.selectedVariant].stock
+    },
+
+    stockStatus() {
+      if (this.stock >= 10) {
+        return 'In Stock'
+      } else if (this.stock > 0) {
+        return 'Almost Out'
+      } else {
+        return 'Out of Stock'
+      }
+    },
+  },
+
   methods: {
-    print() {
-      console.log(this.product.variants[this.product.selectedVariant].image)
+    updateVariant(index) {
+      this.product.selectedVariant = index
+    },
+    addToCart(id) {
+      this.product.variants[this.product.selectedVariant].stock--
+      this.$emit('add-to-cart', id)
     },
   },
 }
@@ -58,9 +104,12 @@ export default {
 
 <style lang="scss" scoped>
 .product-wrapper {
-  display: flex;
-  & > * {
-    width: 50%;
+  @media screen and (min-width: 50rem) {
+    display: flex;
+  }
+
+  p {
+    font-size: 22px;
   }
 }
 </style>

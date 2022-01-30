@@ -1,5 +1,7 @@
 <template>
-  <div class="nav-bar"></div>
+  <div class="nav-bar">
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -13,8 +15,10 @@ export default {
   background: linear-gradient(-90deg, #84cf6a, #16c0b0);
   height: 60px;
   margin-bottom: 25px;
-  -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
-  -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.57);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1.5rem;
 }
 </style>
