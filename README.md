@@ -1,6 +1,6 @@
 # vue3-intro
 
-This is my take on the Vue Mastery Free course [Intro to Vue 3](https://www.vuemastery.com/courses/intro-to-vue-3) using separate scoped components.
+This is my take on the Vue Mastery's Free course [Intro to Vue 3](https://www.vuemastery.com/courses/intro-to-vue-3) using separate scoped components.
 
 ## Project setup
 ```
