@@ -1,15 +1,16 @@
 <template>
-  <div class="product-wrapper">
+<div>
+<div class="product-wrapper">
     <ProductImage
       :src="product.variants[product.selectedVariant].image"
       :alt="product.variants[product.selectedVariant].color"
     />
     <div class="product-info">
-      <ProductTitle :name="product.name" :brand="product.brand" />
+      <product-title :name="product.name" :brand="product.brand" />
       <p>{{ stockStatus }}</p>
       <p>Shipping: {{ premium ? 'Free' : '2,99' }}</p>
-      <ProductDetails :details="product.details" />
-      <ProductColors
+      <product-details :details="product.details" />
+      <product-colors
         :variants="product.variants"
         @variant-hover="updateVariant"
       />
@@ -17,9 +18,13 @@
         text="Add to Cart"
         :isDisabled="!stock"
         @click="addToCart(product.variants[product.selectedVariant].id)"
-      />
+      /> 
     </div>
+    
   </div>
+  <product-reviews :reviews="product.reviews" @review-submitted="addReview" />
+</div>
+  
 </template>
 
 <script>
@@ -28,6 +33,7 @@ import ProductImage from './ProductImage'
 import ProductDetails from './ProductDetails'
 import ProductColors from './ProductColors'
 import Button from '../Button'
+import ProductReviews from './ProductReviews'
 
 export default {
   name: 'Product',
@@ -38,6 +44,7 @@ export default {
     ProductDetails,
     ProductColors,
     Button,
+    ProductReviews,
   },
 
   props: {
@@ -98,14 +105,20 @@ export default {
       this.product.variants[this.product.selectedVariant].stock--
       this.$emit('add-to-cart', id)
     },
+    addReview(review) {
+      this.product.reviews.push(review)
+      console.log(this.product.reviews)
+    }
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .product-wrapper {
+  margin: 40px;
   @media screen and (min-width: 50rem) {
     display: flex;
+    gap: 40px
   }
 
   p {
